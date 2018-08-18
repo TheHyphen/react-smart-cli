@@ -1,9 +1,7 @@
 const { print } = require('recast');
-const Gen = require('./../gen');
 
-const gen = new Gen();
-const g2 = new Gen();
+const { ObjectDeclaration, ObjectDefinition } = require('../gen');
 
-const code = gen.objectDeclaration('hey', g2.objectDefinition({ get: true, set: false }).build()).export();
+const ast = new ObjectDeclaration('hey', new ObjectDefinition({ get: true, set: false }).build()).export();
 
-console.log(print(code).code);
+console.log(print(ast).code);

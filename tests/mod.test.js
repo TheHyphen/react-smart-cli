@@ -1,16 +1,15 @@
-const Mod = require('./../mod');
-const Gen = require('./../gen');
+const Mod = require('./../src/Mod');
+const Gen = require('./../src/Gen');
 const path = require('path');
 
 const mod = new Mod(path.join(__dirname, 'reducer.test.js'));
-const gen = new Gen();
 
-mod.addSwitchCase(gen.switchCase('FIRST_CASE').build());
+mod.addSwitchCase(new Gen.SwitchCase('FIRST_CASE').build());
 
-mod.addConstant(gen.constantDeclaration('FIRST_CASE', 'firstCase', false).export());
+mod.addConstant(new Gen.ConstantDeclaration('FIRST_CASE', 'firstCase', false).export());
 
-mod.addImportStatement(gen.importDeclaration('set', 'lodash'));
+mod.addImportStatement(new Gen.ImportDeclaration('set', 'lodash'));
 
-mod.addFunction(gen.functionDeclaration('secondAction', ['data']));
+mod.addFunction(new Gen.FunctionDeclaration('secondAction', ['data']));
 
 mod.log();
