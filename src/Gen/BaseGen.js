@@ -23,10 +23,10 @@ module.exports = class BaseGen {
 	}
 
 	export() {
-		return parse(`export ${print(this.ast).code}`);
+		return parse(`export ${print(this.ast).code}`).program.body[0];
 	}
 
 	defaultExport() {
-		return parse(`export default ${print(this.ast).code}`);
+		return parse(`export default ${print(this.ast).code}`).program.body[0];
 	}
 }

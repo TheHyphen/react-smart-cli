@@ -31,7 +31,7 @@ module.exports = class BaseMod {
 	}
 
 	write() {
-		writeFileSync(this.print());
+		writeFileSync(this.filepath, this.print());
 	}
 
 	log() {

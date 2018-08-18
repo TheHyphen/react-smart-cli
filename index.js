@@ -1,57 +1,55 @@
-const { print, parse, visit, types } = require('recast');
-var n = types.namedTypes;
-var b = types.builders;
+const inquirer = require('inquirer');
+const Gen = require('./src/Gen');
+const Mod = require('./src/Mod');
+const Case = require('case');
 
-const ast = parse(`
-    import _, { get } from 'lodash';
-    switch(action.type){
-        case SOME_RANDOM_CASE: {
-            draft;
-        }
-    }
-`);
-
-function addLiteralToImport(ast, source, literal) {
-	visit(ast, {
-		visitImportDeclaration: function(path) {
-			if (path.node.source.value === source) {
-				path.node.specifiers.push(b.importSpecifier(b.identifier(literal)));
-			}
-			this.traverse(path);
-		}
-	});
-}
-
-function addCaseToSwitch(ast, variable) {
-	visit(ast, {
-		visitSwitchStatement: function(path) {
-			path.node.cases.push(createSwitchCase(variable));
-			this.traverse(path);
-		}
-	});
-}
-
-function createSwitchCase(variable) {
-	let sCase;
-	visit(
-		parse(`
-        switch(something) {
-            case ${variable}: {
-                draft;
-            }
-        }
-        `),
+inquirer
+	.prompt([
 		{
-			visitSwitchStatement: function(path) {
-				sCase = path.node.cases[0];
-				this.traverse(path);
-			}
+			type: 'list',
+			choices: ['action'],
+			name: 'chosen'
+		},
+		{
+			type: 'input',
+			name: 'action',
+			when: ({ chosen }) => chosen === 'action'
 		}
-	);
-	return sCase;
-}
+	])
+	.then(({ chosen, action }) => {
+		switch (chosen) {
+			case 'action': {
+				const constantName = Case.constant(action);
+				const constantValue = Case.title(action);
+				const actionName = Case.camel(action);
 
-addLiteralToImport(ast, 'lodash', 'set');
-addCaseToSwitch(ast, 'BECAUSE');
+				const switchCase = new Gen.SwitchCase(action).build();
 
-console.log(print(ast).code);
+				const actionFunctionBody = new Gen.Identifier('data').return();
+				const actionFunction = new Gen.FunctionDeclaration(
+					actionName,
+					['data'],
+					actionFunctionBody
+				).export();
+
+				const constant = new Gen.ConstantDeclaration(constantName, constantValue).export();
+
+				const reducerMod = new Mod(__dirname + '/resources/reducer.js');
+				const actionsMod = new Mod(__dirname + '/resources/action.js');
+				const constantsMod = new Mod(__dirname + '/resources/constants.js');
+
+				reducerMod.addSwitchCase(switchCase);
+				reducerMod.write();
+
+				actionsMod.addFunction(actionFunction);
+				actionsMod.write();
+
+				constantsMod.addConstant(constant);
+				constantsMod.write();
+
+				break;
+			}
+			default:
+				break;
+		}
+	});

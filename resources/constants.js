@@ -1,0 +1,1 @@
+export const SOME_CONSTANT = 'someConstant';export const FIRST_CONSTANT = 'First Constant';export const JOKER_CONSTNAT = 'Joker Constnat';export const LOCATION_ACTION = 'Location Action';export const DF = 'Df';export const D_F = 'D F';export const D_F = 'D F';export const D_F = 'D F';export const D_F = 'D F';export const D_F = 'D F';export const D_F = 'D F';
