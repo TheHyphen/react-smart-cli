@@ -1,0 +1,10 @@
+{
+  "name": "rb-cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "ast-types": "^0.11.5",
+    "recast": "^0.15.3"
+  }
+}
