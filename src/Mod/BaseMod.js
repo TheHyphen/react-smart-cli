@@ -1,5 +1,6 @@
 const { print, parse, visit } = require('recast');
 const { readFileSync, writeFileSync } = require('fs');
+const prettier = require('prettier');
 
 module.exports = class BaseMod {
 	constructor(filepath) {
@@ -24,13 +25,16 @@ module.exports = class BaseMod {
 	afterImportStatements(code) {
 		const lastImportIndex = this.ast.program.body.lastIndexOf(body => body.type === 'ImportDeclaration');
 		this.ast.program.body.splice(lastImportIndex - 1, 0, code);
-    }
-    
-    print() {
-		return print(this.ast).code;
+	}
+
+	print() {
+		return prettier.format(print(this.ast).code, {
+			parser: 'babylon'
+		});
 	}
 
 	write() {
+		console.log(`${this.filepath} modified`);
 		writeFileSync(this.filepath, this.print());
 	}
 

@@ -1,55 +1,24 @@
+#!/usr/bin/env node
 const inquirer = require('inquirer');
-const Gen = require('./src/Gen');
-const Mod = require('./src/Mod');
-const Case = require('case');
+const fs = require('fs');
+const path = require('path');
+
+const generators = fs
+	.readdirSync(path.join(__dirname, 'src/Prompts'))
+	.filter(name => name !== 'index.js')
+	.map(name => name.replace('.js', ''));
+
+const prompts = require(path.join(__dirname, 'src/Prompts'));
+const steps = require(path.join(__dirname, 'src/Steps'));
 
 inquirer
 	.prompt([
 		{
 			type: 'list',
-			choices: ['action'],
-			name: 'chosen'
+			choices: generators,
+			name: 'type',
+			message: 'Choose the type of generator'
 		},
-		{
-			type: 'input',
-			name: 'action',
-			when: ({ chosen }) => chosen === 'action'
-		}
+		...prompts
 	])
-	.then(({ chosen, action }) => {
-		switch (chosen) {
-			case 'action': {
-				const constantName = Case.constant(action);
-				const constantValue = Case.title(action);
-				const actionName = Case.camel(action);
-
-				const switchCase = new Gen.SwitchCase(action).build();
-
-				const actionFunctionBody = new Gen.Identifier('data').return();
-				const actionFunction = new Gen.FunctionDeclaration(
-					actionName,
-					['data'],
-					actionFunctionBody
-				).export();
-
-				const constant = new Gen.ConstantDeclaration(constantName, constantValue).export();
-
-				const reducerMod = new Mod(__dirname + '/resources/reducer.js');
-				const actionsMod = new Mod(__dirname + '/resources/action.js');
-				const constantsMod = new Mod(__dirname + '/resources/constants.js');
-
-				reducerMod.addSwitchCase(switchCase);
-				reducerMod.write();
-
-				actionsMod.addFunction(actionFunction);
-				actionsMod.write();
-
-				constantsMod.addConstant(constant);
-				constantsMod.write();
-
-				break;
-			}
-			default:
-				break;
-		}
-	});
+	.then(answers => steps[answers.type](answers));

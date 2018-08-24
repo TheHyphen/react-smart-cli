@@ -6,7 +6,11 @@
   "dependencies": {
     "ast-types": "^0.11.5",
     "case": "^1.5.5",
+    "glob": "^7.1.2",
     "inquirer": "^6.1.0",
+    "prettier": "^1.14.2",
     "recast": "^0.15.3"
-  }
+  },
+  "bin": "index.js",
+  "preferGlobal": true
 }
