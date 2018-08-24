@@ -10,7 +10,7 @@ module.exports = [
 	{
 		type: 'list',
 		message: 'Choose the container',
-		name: 'file',
+		name: 'container',
 		choices: finder.findContainers()
 	},
 	{
@@ -19,4 +19,4 @@ module.exports = [
 		message: 'Async action?',
 		name: 'isAsync'
 	},
-].map(p => ({ ...p, when: a => a.type === 'action' }));
+];

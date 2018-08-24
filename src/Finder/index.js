@@ -13,16 +13,17 @@ module.exports = class Finder {
 		});
 	}
 
+	// TODO: following should not be [0]
 	findReducer() {
-		return this.findContaining('reducer');
+		return path.join(this.root, this.findContaining('reducer')[0]);
 	}
 
 	findAction() {
-		return this.findContaining('action');
+		return path.join(this.root, this.findContaining('action')[0]);
 	}
 
 	findConstant() {
-		return this.findContaining('constant');
+		return path.join(this.root, this.findContaining('constant')[0]);
 	}
 
 	// expected to have all the containers in one place - how often is this possible?
