@@ -1,12 +1,16 @@
 const { print, parse, visit } = require('recast');
 const { readFileSync, writeFileSync } = require('fs');
 const prettier = require('prettier');
+const path = require('path');
 
 module.exports = class BaseMod {
 	constructor(filepath) {
 		this.filepath = filepath;
 		this.file = readFileSync(filepath);
 		this.ast = parse(this.file);
+		const directories = this.filepath.split(path.sep);
+		directories.pop();
+		this.fileDirectory = directories.join(path.sep);
 	}
 
 	modifier(visitor, modFunction) {

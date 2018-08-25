@@ -31,7 +31,11 @@ function worker(name, paths) {
 	const constantsMod = new Mod(path.join(paths.constant));
 
 	reducerMod.addSwitchCase(switchCase);
+	reducerMod.modImportStatement(paths.constant, new Gen.ImportSpecifier(constantName).build());
+	
 	actionsMod.addFunction(actionFunction);
+	actionsMod.modImportStatement(paths.constant, new Gen.ImportSpecifier(constantName).build());
+	
 	constantsMod.addConstant(constant);
 
 	reducerMod.write();
