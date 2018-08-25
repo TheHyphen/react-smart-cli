@@ -2,6 +2,7 @@ const Gen = require('./../Gen');
 const Mod = require('./../Mod');
 const Case = require('case');
 const path = require('path');
+const config = require('./../../config');
 
 module.exports = function({ name, isAsync, paths }) {
 	worker(name, paths);
@@ -13,7 +14,7 @@ module.exports = function({ name, isAsync, paths }) {
 
 function worker(name, paths) {
 	const constantName = Case.constant(name);
-	const constantValue = Case.title(name);
+	const constantValue = Case.title(config.constantPrefix + '-' + name);
 	const constant = new Gen.ConstantDeclaration(constantName, constantValue).export();
 
 	const switchCase = new Gen.SwitchCase(constantName).build();

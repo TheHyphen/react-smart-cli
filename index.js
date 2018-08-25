@@ -12,6 +12,8 @@ const generators = fs
 const prompts = require(path.join(__dirname, 'src/Prompts'));
 const steps = require(path.join(__dirname, 'src/Steps'));
 
+const config = require('./config');
+
 inquirer
 	.prompt([
 		{
@@ -24,7 +26,7 @@ inquirer
 	])
 	.then(answers => {
 		if (answers.container) {
-			const finder = new Finder(path.join(process.cwd(), 'app/containers', answers.container));
+			const finder = new Finder(path.join(process.cwd(), config.containersPath, answers.container));
 			return Promise.resolve({
 				...answers,
 				paths: {
@@ -38,5 +40,5 @@ inquirer
 		}
 	})
 	.then(answers => {
-		steps[answers.type](answers)
+		steps[answers.type](answers);
 	});

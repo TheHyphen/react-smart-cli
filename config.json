@@ -1,0 +1,10 @@
+{
+	"containersPath": "app/containers",
+	"reducerGlob": "reducer",
+	"actionGlob": "action",
+	"constantGlob": "constant",
+
+	"template": "redux-saga",
+
+	"constantPrefix": "app/app-name/"
+}
