@@ -1,8 +1,10 @@
 #!/usr/bin/env node
+const { get, noop } = require('lodash');
 const inquirer = require('inquirer');
 const fs = require('fs');
 const path = require('path');
 const Finder = require('./src/Finder');
+const config = require('./config');
 
 const generators = fs
 	.readdirSync(path.join(__dirname, 'src/Prompts'))
@@ -11,8 +13,24 @@ const generators = fs
 
 const prompts = require(path.join(__dirname, 'src/Prompts'));
 const steps = require(path.join(__dirname, 'src/Steps'));
-
-const config = require('./config');
+const templates = {
+	...fs.readdirSync(path.join(__dirname, 'templates', config.template)).reduce(
+		(t, file) => ({
+			...t,
+			[file.replace('.js', '')]: require(path.join(__dirname, 'templates', config.template, file))
+		}),
+		{}
+	),
+	...(config.templatePath
+		? fs.readdirSync(path.join(__dirname, config.templatePath, config.template)).reduce(
+				(t, file) => ({
+					...t,
+					[file.replace('.js', '')]: require(file)
+				}),
+				{}
+		  )
+		: {})
+};
 
 inquirer
 	.prompt([
@@ -32,7 +50,8 @@ inquirer
 				paths: {
 					reducer: finder.findReducer(),
 					action: finder.findAction(),
-					constant: finder.findConstant()
+					constant: finder.findConstant(),
+					saga: finder.findSaga()
 				}
 			});
 		} else {
@@ -41,4 +60,5 @@ inquirer
 	})
 	.then(answers => {
 		steps[answers.type](answers);
+		get(templates, answers.type, noop)(answers);
 	});

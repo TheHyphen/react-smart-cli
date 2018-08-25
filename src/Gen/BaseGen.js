@@ -1,4 +1,4 @@
-const { print, parse, visit, types } = require('recast');
+const { print, parse, visit } = require('recast');
 
 module.exports = class BaseGen {
 	constructor() {
@@ -6,7 +6,7 @@ module.exports = class BaseGen {
 	}
 	getAstFromCode(code, visitor, extractor) {
 		let ast;
-		visit(parse(code), {
+		visit(this.parse(code), {
 			[`visit${visitor}`]: function(path) {
 				ast = extractor(path);
 				this.traverse(path);
@@ -14,19 +14,24 @@ module.exports = class BaseGen {
 		});
 		return ast;
 	}
+	parse(code) {
+		return parse(code, {
+			parser: require('recast/parsers/babylon')
+		});
+	}
 	build() {
 		return this.ast;
 	}
 
 	return() {
-		return parse(`return ${print(this.ast).code}`);
+		return this.parse(`return ${print(this.ast).code}`);
 	}
 
 	export() {
-		return parse(`export ${print(this.ast).code}`).program.body[0];
+		return this.parse(`export ${print(this.ast).code}`).program.body[0];
 	}
 
 	defaultExport() {
-		return parse(`export default ${print(this.ast).code}`).program.body[0];
+		return this.parse(`export default ${print(this.ast).code}`).program.body[0];
 	}
-}
+};

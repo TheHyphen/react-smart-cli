@@ -1,5 +1,8 @@
 exports.ConstantDeclaration = require('./generators/ConstantDeclaration');
 exports.FunctionDeclaration = require('./generators/FunctionDeclaration');
+exports.FunctionBody = require('./generators/FunctionBody');
+exports.GeneratorDeclaration = require('./generators/GeneratorDeclaration');
+exports.GeneratorFunctionBody = require('./generators/GeneratorFunctionBody');
 exports.Identifier = require('./generators/Identifier');
 exports.ImportDeclaration = require('./generators/ImportDeclaration');
 exports.ImportSpecifier = require('./generators/ImportSpecifier');

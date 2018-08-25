@@ -7,10 +7,17 @@ module.exports = class BaseMod {
 	constructor(filepath) {
 		this.filepath = filepath;
 		this.file = readFileSync(filepath);
-		this.ast = parse(this.file);
+		this.ast = this.parse(this.file);
+
 		const directories = this.filepath.split(path.sep);
 		directories.pop();
 		this.fileDirectory = directories.join(path.sep);
+	}
+
+	parse(code) {
+		return parse(code, {
+			parser: require('recast/parsers/babylon')
+		});
 	}
 
 	modifier(visitor, modFunction) {

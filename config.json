@@ -3,8 +3,9 @@
 	"reducerGlob": "reducer",
 	"actionGlob": "action",
 	"constantGlob": "constant",
+	"sagaGlob": "saga",
 
 	"template": "redux-saga",
-
+	
 	"constantPrefix": "app/app-name/"
 }

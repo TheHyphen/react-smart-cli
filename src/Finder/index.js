@@ -26,6 +26,10 @@ module.exports = class Finder {
 	findConstant() {
 		return path.join(this.root, this.findContaining(config.constantGlob)[0]);
 	}
+	
+	findSaga() {
+		return path.join(this.root, this.findContaining(config.sagaGlob)[0]);
+	}
 
 	// expected to have all the containers in one place - how often is this possible?
 	findContainers() {
