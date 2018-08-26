@@ -14,7 +14,7 @@ module.exports = function({ name, isAsync, paths }) {
 
 function worker(name, paths) {
 	const constantName = Case.constant(name);
-	const constantValue = Case.title(config.constantPrefix + '-' + name);
+	const constantValue = config.constantPrefix + Case.title(name);
 	const constant = new Gen.ConstantDeclaration(constantName, constantValue).export();
 
 	const switchCase = new Gen.SwitchCase(constantName).build();

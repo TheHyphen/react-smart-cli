@@ -19,4 +19,11 @@ module.exports = [
 		message: 'Async action?',
 		name: 'isAsync'
 	},
+	{
+		type: 'confirm',
+		default: false,
+		message: 'API call?',
+		name: 'api',
+		when: answers => answers.isAsync
+	}
 ];

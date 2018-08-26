@@ -8,10 +8,8 @@ module.exports = class BaseMod {
 		this.filepath = filepath;
 		this.file = readFileSync(filepath);
 		this.ast = this.parse(this.file);
-
-		const directories = this.filepath.split(path.sep);
-		directories.pop();
-		this.fileDirectory = directories.join(path.sep);
+		
+		this.fileDirectory = path.parse(this.filepath).dir;
 	}
 
 	parse(code) {

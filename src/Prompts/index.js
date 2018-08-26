@@ -9,7 +9,7 @@ module.exports = flatten(
 		.map(file =>
 			require(path.join(__dirname, file)).map(p => ({
 				...p,
-				when: a => a.type === file.replace('.js', '')
+				when: a => a.type === file.replace('.js', '') && (p.when ? p.when(a) : true)
 			}))
 		)
 );
