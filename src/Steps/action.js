@@ -32,13 +32,12 @@ function worker(name, paths) {
 
 	reducerMod.addSwitchCase(switchCase);
 	reducerMod.modImportStatement(paths.constant, new Gen.ImportSpecifier(constantName).build());
+	reducerMod.write();
 	
 	actionsMod.addFunction(actionFunction);
 	actionsMod.modImportStatement(paths.constant, new Gen.ImportSpecifier(constantName).build());
+	actionsMod.write();
 	
 	constantsMod.addConstant(constant);
-
-	reducerMod.write();
-	actionsMod.write();
 	constantsMod.write();
 }

@@ -10,10 +10,13 @@ module.exports = class Mod extends BaseMod {
 	}
 
 	addConstant(constant) {
+		this.logChange(`added constant`)
 		this.eof(constant);
 	}
 
 	addImportStatement(statement) {
+		console.log(statement);
+		this.logChange(`added import statement`)
 		this.afterImportStatements(statement);
 	}
 
@@ -24,6 +27,7 @@ module.exports = class Mod extends BaseMod {
 				// TODO: analyse value.specifiers to handle `import * as something` case
 				value.specifiers.push(importSpecifier);
 				statementFound = true;
+				this.logChange(`modified import statement from "${value.source.value}"`)
 			}
 		});
 		if (!statementFound) {
@@ -37,6 +41,7 @@ module.exports = class Mod extends BaseMod {
 	}
 
 	addFunction(fn) {
+		this.logChange(`added function`)
 		this.eof(fn);
 	}
 };
