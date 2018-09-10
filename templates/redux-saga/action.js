@@ -18,7 +18,11 @@ module.exports = function(answers) {
 			}
             `
 		).build();
-		const sagaFunction = new Gen.GeneratorDeclaration(Case.camel(answers.name), [], sagaBody).export();
+		const sagaFunction = new Gen.GeneratorDeclaration(
+			Case.camel(answers.name) + 'Saga',
+			[],
+			sagaBody
+		).export();
 		modSaga.addFunction(sagaFunction);
 
 		modSaga.modImportStatement(answers.paths.action, new Gen.ImportSpecifier(actionName).build());
@@ -34,6 +38,16 @@ module.exports = function(answers) {
 		}
 		modSaga.modImportStatement(answers.paths.constant, new Gen.ImportSpecifier(constantName).build());
 
+		const defaultSagaBodyStatement = new Gen.GeneratorFunctionBody(`
+			yield takeLatest(${constantName}, ${Case.camel(answers.name)}Saga);
+		`).build();
+		modSaga.modifier(
+			'ExportDefaultDeclaration',
+			path =>
+				(path.value.declaration.body.body = path.value.declaration.body.body.concat(
+					defaultSagaBodyStatement
+				))
+		);
 		modSaga.write();
 	}
 };
